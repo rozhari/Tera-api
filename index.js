@@ -2,7 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const app = express();
 
-const NDUS = "YeE7KKMteHuihpGN5IBrJ7kBc8vs7WkKj5BsQsqS";
+const NDUS = "YeE7KKMteHui2PUoNRCuh_LV2QVfRx0oj9siCeDG";
 
 app.get('/api', async (req, res) => {
     let teraboxUrl = req.query.url;
