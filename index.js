@@ -2,15 +2,21 @@ const express = require('express');
 const axios = require('axios');
 const app = express();
 
-// നിങ്ങളുടെ ndus കുക്കി ഇവിടെ നൽകുക
 const NDUS = "YeE7KKMteHuihpGN5IBrJ7kBc8vs7WkKj5BsQsqS";
 
 app.get('/api', async (req, res) => {
-    const teraboxUrl = req.query.url;
+    let teraboxUrl = req.query.url;
     if (!teraboxUrl) return res.json({ error: "URL is required" });
 
     try {
-        const surl = teraboxUrl.split('surl=')[1] || teraboxUrl.split('/').pop();
+        // എല്ലാ തരം ടെറാബോക്സ് ലിങ്കുകളിൽ നിന്നും surl കണ്ടെത്താനുള്ള വഴി
+        let surl = "";
+        if (teraboxUrl.includes("surl=")) {
+            surl = teraboxUrl.split("surl=")[1];
+        } else {
+            surl = teraboxUrl.split("/").pop().replace("1", "");
+        }
+
         const response = await axios.get(`https://www.terabox.com/share/list?surl=${surl}`, {
             headers: {
                 'Cookie': `ndus=${NDUS}`,
@@ -25,15 +31,16 @@ app.get('/api', async (req, res) => {
                 download_link: response.data.list[0].dlink
             });
         } else {
-            res.json({ status: "error", message: "File not found or Cookie expired" });
+            res.json({ 
+                status: "error", 
+                message: "ഫയൽ കണ്ടുപിടിക്കാൻ പറ്റിയില്ല. കുക്കി മാറിക്കാണും.",
+                debug_surl: surl // എവിടെയാണ് പ്രശ്നമെന്ന് അറിയാൻ
+            });
         }
     } catch (error) {
         res.status(500).json({ status: "error", message: error.message });
     }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
-          
+const PORT = process.env.PORT || 8080; // Koyeb-ന് വേണ്ടി 8080 ആക്കി മാറ്റാം
+app.listen(PORT, () => console.log(`Server running on ${PORT}`));
