@@ -1,12 +1,13 @@
 {
   "name": "terabox-api",
   "version": "1.0.0",
-  "main": "server.js",
+  "description": "TeraBox Downloader API",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "dependencies": {
-    "express": "^4.19.2",
-    "axios": "^1.6.8"
+    "express": "^4.18.2",
+    "axios": "^1.6.0"
   }
 }
